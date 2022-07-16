@@ -8,13 +8,12 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"strconv"
 )
 
-var portFlag int
+var addrFlag string
 
 func init() {
-	flag.IntVar(&portFlag, "port", 8000, "port number")
+	flag.StringVar(&addrFlag, "addr", "localhost:8000", "address")
 	flag.Usage = usage
 }
 
@@ -119,8 +118,6 @@ func main() {
 			}
 		})
 	}
-
-	network := ":" + strconv.Itoa(portFlag)
-	log.Fatal(http.ListenAndServe(network, nil))
-
+	
+	log.Fatal(http.ListenAndServe(addrFlag, nil))
 }
