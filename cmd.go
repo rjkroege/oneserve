@@ -30,33 +30,6 @@ func usage() {
 	flag.PrintDefaults()
 }
 
-// I copied this from blog. It behooves me to create a library that
-// I can use.
-func setMimeType(pth string, w http.ResponseWriter) {
-	ext := path.Ext(pth)
-
-	// Expand this as necessary based on the content that we feature.
-	switch ext {
-	case "":
-		pth = path.Join(pth, "index.html")
-		w.Header().Set("Content-Type", "text/html")
-	case ".html":
-		w.Header().Set("Content-Type", "text/html")
-	case ".xml":
-		w.Header().Set("Content-Type", "application/xml")
-	case ".css":
-		w.Header().Set("Content-Type", "text/css")
-	case ".js":
-		w.Header().Set("Content-Type", "application/javascript")
-	case ".svg":
-		w.Header().Set("Content-Type", "image/svg+xml")
-	case ".jpeg", ".jpg":
-		w.Header().Set("Content-Type", "image/jpeg")
-	case ".png":
-		w.Header().Set("Content-Type", "image/png")
-	}
-}
-
 func main() {
 	log.Println("Hello")
 
@@ -83,20 +56,7 @@ func main() {
 		}
 
 		http.HandleFunc(path.Join("/", relfn), func(w http.ResponseWriter, r *http.Request) {
-			log.Println(r.URL.Path)
-			fpath := filepath.Join(rootpath, r.URL.Path)
-
-			fd, err := os.Open(fpath)
-			if err != nil {
-				log.Println("Coudln't open", fpath, "because", err)
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-			setMimeType(fpath, w)
-			if _, err := io.Copy(w, fd); err != nil {
-				log.Println("failed to serve file", fpath, "because", err)
-				w.WriteHeader(http.StatusBadRequest)
-			}
+			getHandler(rootpath, w, r)
 		})
 	}
 
@@ -118,6 +78,6 @@ func main() {
 			}
 		})
 	}
-	
+
 	log.Fatal(http.ListenAndServe(addrFlag, nil))
 }

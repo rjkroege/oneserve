@@ -1,0 +1,7 @@
+// Basics
+Edit X:oneserve/\+Errors: 1,$d
+X:oneserve/.*\.go: w
+
+
+go build
+{./oneserve .}
