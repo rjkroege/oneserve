@@ -11,10 +11,42 @@ import (
 // TODO(rjk): Make it prettier with nice CSS.
 
 const dirlisting = `<html>
+<head>
+</head>
 <body>
 <ul>
 {{range .}} <li><a href="./{{ .Name }}">{{ .Name }}</a></li> {{end}}
 </ul>
+<br>
+<div id="output" style="min-height: 200px; white-space: pre; border: 1px solid black;"
+     ondragenter="document.getElementById('output').textContent = ''; event.stopPropagation(); event.preventDefault();"
+     ondragover="event.stopPropagation(); event.preventDefault();"
+     ondrop="event.stopPropagation(); event.preventDefault();
+     dodrop(event);">
+     Drop files to upload here!
+</div>
+<script>
+
+function dodrop(event)
+{
+  var dt = event.dataTransfer;
+  var files = dt.files;
+
+  var count = files.length;
+  output("File Count: " + count + "\n");
+
+    for (var i = 0; i < files.length; i++) {
+      output(" File " + i + ":\n(" + (typeof files[i]) + ") : <" + files[i] + " > " +
+             files[i].name + " " + files[i].size + "\n");
+    }
+}
+
+function output(text)
+{
+  document.getElementById("output").textContent += text;
+  //dump(text);
+}
+</script>
 </body>
 </html>
 `
