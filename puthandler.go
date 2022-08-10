@@ -1,16 +1,16 @@
 package main
 
 import (
-	"net/http"
-	"log"
 	"io"
-	"path/filepath"
+	"log"
+	"net/http"
 	"os"
+	"path/filepath"
 )
 
 func putHandler(rootpath string, w http.ResponseWriter, r *http.Request) {
-	log.Println("should handle the put now")
-	log.Println(r)
+	// log.Println("should handle the put now")
+	// log.Println(r)
 
 	mpf, mpinfo, err := r.FormFile("file")
 	if err != nil {
@@ -18,7 +18,7 @@ func putHandler(rootpath string, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer mpf.Close()
-	
+
 	destfilepath := filepath.Join(rootpath, mpinfo.Filename)
 	dest, err := os.Create(destfilepath)
 	if err != nil {

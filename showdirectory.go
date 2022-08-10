@@ -16,7 +16,7 @@ const dirlisting = `<html>
 <head>
 </head>
 <body>
-<ul>
+<ul id="filelist">
 {{range .}} <li><a href="./{{ .Name }}">{{ .Name }}</a></li> {{end}}
 </ul>
 <br>
@@ -53,9 +53,12 @@ function uploadFile(file) {
   })
   .then(() => { /* Done. Inform the user */ 
 	console.log("have done the upload");
+	let filelist = document.getElementById("filelist")
+	filelist.insertAdjacentHTML("beforeend", '<li> <a href=./"' + file.name + '">' + file.name + '</a></li>');
 	})
   .catch(() => { /* Error. Inform the user */ 
 	console.log("didn't work out, the upload thing. shucks");
+	// TODO(rjk): Do something pretty here.
 	})
 }
 
