@@ -56,7 +56,7 @@ func main() {
 		}
 
 		http.HandleFunc(path.Join("/", relfn), func(w http.ResponseWriter, r *http.Request) {
-			getHandler(rootpath, w, r)
+			basicHandler(rootpath, w, r)
 		})
 	}
 

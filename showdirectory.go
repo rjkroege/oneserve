@@ -9,6 +9,8 @@ import (
 )
 
 // TODO(rjk): Make it prettier with nice CSS.
+// TODO(rjk): Pull the CSS and JavaScript into a spearate payload (Go
+// filesystem support.)
 
 const dirlisting = `<html>
 <head>
@@ -27,18 +29,34 @@ const dirlisting = `<html>
 </div>
 <script>
 
+// event is a drop event (the ondrop event handler.)
 function dodrop(event)
 {
-  var dt = event.dataTransfer;
-  var files = dt.files;
+	let dt = event.dataTransfer;
+	let files = dt.files;
+ 
+	([...files]).forEach(uploadFile)
+}
 
-  var count = files.length;
-  output("File Count: " + count + "\n");
 
-    for (var i = 0; i < files.length; i++) {
-      output(" File " + i + ":\n(" + (typeof files[i]) + ") : <" + files[i] + " > " +
-             files[i].name + " " + files[i].size + "\n");
-    }
+function uploadFile(file) {
+	console.log(file)
+
+	let url = window.location.href;
+	let formData = new FormData();
+
+	formData.append('file', file);
+
+  fetch(url, {
+    method: 'POST',
+    body: formData
+  })
+  .then(() => { /* Done. Inform the user */ 
+	console.log("have done the upload");
+	})
+  .catch(() => { /* Error. Inform the user */ 
+	console.log("didn't work out, the upload thing. shucks");
+	})
 }
 
 function output(text)

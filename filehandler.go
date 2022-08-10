@@ -8,9 +8,14 @@ import (
 	"path/filepath"
 )
 
-func getHandler(rootpath string, w http.ResponseWriter, r *http.Request) {
+func basicHandler(rootpath string, w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL.Path)
 	fpath := filepath.Join(rootpath, r.URL.Path)
+
+	if r.Method == "POST" {
+		putHandler(rootpath, w, r)
+		return
+	}
 
 	fi, err := os.Stat(fpath)
 	if err != nil {
