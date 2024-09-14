@@ -9,11 +9,12 @@ import (
 )
 
 func basicHandler(rootpath string, w http.ResponseWriter, r *http.Request) {
-	log.Println(r.URL.Path)
+	log.Println("rootpath", rootpath, "url", r.URL.Path)
 	fpath := filepath.Join(rootpath, r.URL.Path)
+	log.Println("fpath", fpath)
 
 	if r.Method == "POST" {
-		putHandler(rootpath, w, r)
+		putHandler(fpath, w, r)
 		return
 	}
 
@@ -26,8 +27,7 @@ func basicHandler(rootpath string, w http.ResponseWriter, r *http.Request) {
 	}
 
 	if fi.IsDir() {
-		log.Println("fooey")
-		getDirectory(fpath, w)
+		getDirectory(rootpath, fpath, w)
 		return
 	}
 
