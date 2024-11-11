@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -40,6 +39,10 @@ func main() {
 		log.Fatalln("can't determine current directory: ", err)
 	}
 
+	if len(args) == 0 {
+		args = append(args, ".")
+	}
+
 	for _, fn := range args {
 		log.Println("file to serve", fn)
 
@@ -57,25 +60,6 @@ func main() {
 
 		http.HandleFunc(path.Join("/", relfn), func(w http.ResponseWriter, r *http.Request) {
 			basicHandler(rootpath, w, r)
-		})
-	}
-
-	if len(args) == 0 {
-		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			log.Println(r.URL.Path)
-			fpath := filepath.Join(rootpath, r.URL.Path)
-
-			fd, err := os.Open(fpath)
-			if err != nil {
-				log.Println("Coudln't open", fpath, "because", err)
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-			setMimeType(fpath, w)
-			if _, err := io.Copy(w, fd); err != nil {
-				log.Println("failed to serve file", fpath, "because", err)
-				w.WriteHeader(http.StatusBadRequest)
-			}
 		})
 	}
 
